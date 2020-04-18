@@ -1,32 +1,139 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+  <v-app>
+    <!-- <div class="mx-auto my-auto"> -->
+    <v-card 
+    width="540"
+    class="mx-auto my-auto">
+
+      <Header 
+        @toggleDrawer="toggleDrawer">
+      </Header>
+
+      <v-content>
+        <Drawer 
+          :toggle="toggle"
+          :links="gameLinks" 
+          :settings="gameSettings" 
+          @changeSettings="changeSettings">
+
+          <template v-slot:header>
+            <div class="title text-center my-3">
+              <v-icon color="indigo">timer</v-icon>
+              <span class="white--text ">Thai<strong>TIME</strong></span>
+            </div>
+            <div class="text-center my-3">
+              <v-btn 
+                :href="myInfo.support" 
+                target="_blank"
+                rounded 
+                outlined 
+                dark>Support
+              </v-btn>
+            </div>
+          </template>
+
+          <template v-slot:footer>
+            <div class="white--text text-center pa-2">
+              {{ new Date().getFullYear() }} — 
+              <span class="designed">Made with </span>
+              <v-icon class="red--text">favorite</v-icon>
+              by <a class="white--text" :href="myInfo.link" target="_blank">{{ myInfo.name }}</a>
+            </div>
+          </template>
+
+        </Drawer>
+
+        <component :is="selectedComponent"></component>
+      </v-content>
+
+      <!-- <Footer
+        :info="myInfo"/> -->
+    </v-card>
+    <!-- </div> -->
+
+  </v-app>
 </template>
 
+<script>
+import { mapState, mapGetters, mapMutations } from 'vuex';
+import Drawer from '@/components/NavigationDrawer';
+import Header from '@/layouts/Header';
+import Home from '@/views/Home';
+import Play from '@/views/Play';
+import Over from '@/views/Over';
+
+export default {
+  name: 'App',
+
+  components: {
+    Drawer,
+    Header,
+    Home,
+    Play,
+    Over,
+  },
+
+  data: () => ({
+    //
+    selectedComponent: 'Home',
+    toggle: false,
+  }),
+
+  computed: {
+    ...mapState([
+      'gamePhase',
+      'gameLinks',
+      'gameSettings',
+      'myInfo',
+    ]),
+    ...mapGetters([
+    ])
+  },
+
+  methods: {
+    ...mapMutations([
+    ]),
+    toggleDrawer() {
+      this.toggle = !this.toggle
+    },
+    changeSettings(value) {
+      this.$store.state.gameSettings = value
+    },
+  },
+
+  watch: {
+    gamePhase: { 
+      immediate: true,
+      handler() {
+        if (this.gamePhase == "home") {
+          this.selectedComponent = 'Home';
+        } else if (this.gamePhase == "play") {
+          this.selectedComponent = 'Play';
+        } else if (this.gamePhase == "over") {
+          this.selectedComponent = 'Over';
+        }
+      }
+    }
+  }
+};
+</script>
+
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+@import url('https://fonts.googleapis.com/css?family=Dynalight');
 
-#nav {
-  padding: 30px;
+@media screen and (min-width: 540px) {
+  .card-inner {
+    height: 580px;
+  }
 }
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
+.v-chip.number {
+  background-color:gold !important;
 }
-
-#nav a.router-link-exact-active {
-  color: #42b983;
+.v-chip.word {
+  background-color:coral !important;
+}
+.designed {
+  font-family: 'Dynalight';
+  font-size: 1.5em;
 }
 </style>
