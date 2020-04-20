@@ -3,12 +3,12 @@
 
     <v-card-text class="card-inner pa-0">
       <v-row class="justify-center">
-        <v-col cols="10" sm="6">
+        <v-col cols="8" sm="6">
           <AnalogClock
             v-if="newDate" 
             :newDate="newDate" 
             :showSecond=false
-            nameBrand=""/>
+          />
         </v-col>
       </v-row>
 
@@ -89,6 +89,7 @@ export default {
 
   created() {
     this.hour = Math.floor(Math.random() * 24);
+    // this.hour = 1;
     this.minute = 0;
     this.$store.state.gameScore = 0;
     this.$store.state.numRound = 1;
@@ -119,7 +120,7 @@ export default {
   /*eslint-disable no-unused-vars*/ 
   watch: {
     hourAndMinute: { 
-      immediate: false,
+      immediate: true,
       handler(newValue, oldValue) {
         this.newDate = new Date();
         this.newDate.setHours(this.hour.toString());

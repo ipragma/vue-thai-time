@@ -2,43 +2,26 @@
 https://basicuse.net/articles/pl/textile/html_css/creating_analog_clock_with_responsive_design_using_animation_in_css3 
 https://codepen.io/peterhanus/post/responsive-analog-clock-demo
 https://www.telerik.com/blogs/passing-variables-to-css-on-a-vue-component //ToTry
+https://www.youtube.com/watch?v=94TKO4eKfIA
+https://www.youtube.com/watch?v=JeLGZ6GH_H0
+https://www.telerik.com/blogs/passing-variables-to-css-on-a-vue-component
 -->
+
 <template>
-<div class="clock-case">
-  <div class="clock-dial">
-    <div 
-      v-show="nameBrand" 
-      class="clock-brand"
-      :style="{ 
-        'font-size': unit.p1 + 'px',
-        'text-shadow': unit.p5 + 'px ' + unit.p5 + 'px ' + unit.p5*2 + 'px #fff'
-      }"
-    >{{ nameBrand }}</div>
-    <div class="twelve" :style="{ 'font-size': unit.p1 + 'px', 'top': unit.p3 + 'px' }">12</div>
-    <div class="three" :style="{ 'font-size': unit.p1 + 'px', 'right': unit.p2 + 'px' }">3</div>
-    <div class="six" :style="{ 'font-size': unit.p1 + 'px', 'bottom': unit.p2 + 'px' }">6</div>
-    <div class="nine" :style="{ 'font-size': unit.p1 + 'px', 'left': unit.p2 + 'px' }">9</div>
-    <div
-      class="clock-dial-line"
-      v-for="(n, i) in 60"
-      :key="i + '-small'"
-      :style="{ 
-        'transform-origin': '0 ' + unit.p0 + 'px',
-        'transform': 'rotate(' + 6*n + 'deg)',
-      }"
-    ></div>
-    <div v-show="showDigi" class="clock-digi" 
-      :style="{ 
-        'font-size': unit.p1*0.9 + 'px',
-        'border-radius': unit.p4 + 'px',
-        'padding': unit.p4 + 'px'+ ' '+ unit.p3 + 'px',
-      }">{{ showDigi }}
+<div class="case" ref="case" :style="cssVars">
+  <div class="clock" ref="clock"> 
+    <div v-if="showDigi">
+      <div class="digi">{{ showDigi }}</div>
     </div>
-    <div v-if="showSecond" class="clock-second-hand" :style="{ 'transform': 'rotate(' + angleSeconds + 'deg)' }"></div>
-    <div class="clock-minute-hand" :style="{ 'transform': 'rotate(' + angleMinutes + 'deg)' }"></div>
-    <div class="clock-hour-hand" :style="{ 'transform': 'rotate(' + angleHours + 'deg)' }"></div>
-    <div class="clock-nut"></div>
-    <div class="clock-ratio" ref="ratio"></div>
+    <div class="hour">
+      <div class="hr" id="hr" :style="{ 'transform': 'rotate(' + angleHours + 'deg)' }"></div>
+    </div>
+    <div class="min">
+      <div class="mn" id="mn" :style="{ 'transform': 'rotate(' + angleMinutes + 'deg)' }"></div>
+    </div>
+    <div v-if="showSecond" class="sec">
+      <div class="sc" id="sc" :style="{ 'transform': 'rotate(' + angleSeconds + 'deg)' }"></div>
+    </div>
   </div>
 </div>
 </template>
@@ -49,7 +32,6 @@ let interval = null;
 export default {
   props: {
     newDate: Date,
-    nameBrand: String,
     showSecond: {
       type: Boolean,
       default: true
@@ -59,7 +41,7 @@ export default {
   data() {
     return {
       currentDate: new Date(),
-      clockWidth: null,
+      clockWidth: 350,
     };
   },
 
@@ -83,33 +65,34 @@ export default {
       return this.currentDate.getSeconds() * 6;
     },
     angleMinutes() {
-      return this.currentDate.getMinutes() * 6 + this.currentDate.getSeconds() * (360 / 3600);
+      return this.currentDate.getMinutes() * 6 + this.currentDate.getSeconds() * (360/3600);
     },
     angleHours() {
-      return this.currentDate.getHours() * 30 + this.currentDate.getMinutes() * (360 / 720);
+      return this.currentDate.getHours() * 30 + this.currentDate.getMinutes() * (360/720);
     },
     showDigi() {
       return (this.currentDate.getHours() < 12 ? "AM" : "PM");
     },
-    unit() {
+    cssVars() {
+      let one = this.clockWidth/350;
+      // console.log('cssvars:one=' + one)
       return {
-        p0: this.clockWidth/2,
-        p1: this.clockWidth/10,
-        p2: this.clockWidth/20,
-        p3: this.clockWidth/30,
-        p4: this.clockWidth/50,
-        p5: this.clockWidth/500,
+        '--one': one + 'px',
+        '--clock-border': (one*15) + 'px solid #fff',
+        '--clock-box-shadow': 'inset 0 0 ' + (one*15) + 'px rgba(0, 0, 0, .1), 0 ' + (one*15) + 'px '+ (one*15) + 'px rgba(0, 0, 0, .2), 0 0 0 ' + (one*2) + 'px rgba(255, 255, 255, 1)',
+        '--border-radius': (one*6) + 'px ' + (one*6) + 'px 0 0',
+        '--digi-padding': (one*4) + 'px ' + (one*4) + 'px 0 ' + (one*4) + 'px',
+        '--digi-transform': 'translateY(' + (one*75) + 'px',
+        '--digi-box-shadow': 'inset 0 ' + (one*4) + 'px ' + (one*4) + 'px 0 rgba(0, 0, 0, 0.3), inset 0 ' + (one*-4) + 'px ' + (one*4) + 'px 0 rgba(255, 255, 255, 0.2)'
       }
     }
   },
 
   methods: {
     handleResize() {
-      if (this.$refs.ratio.clientWidth % 2 == 0) {
-        this.clockWidth = this.$refs.ratio.clientWidth 
-      } else {
-        this.clockWidth = this.$refs.ratio.clientWidth - 1
-      }
+      // console.log('handleResize:clientWidth=' + this.$refs.case.clientWidth)
+      // console.log('handleResize:clientHeight=' + this.$refs.case.clientHeight)
+      this.clockWidth = this.$refs.case.clientWidth;
     },
   },
 
@@ -131,148 +114,97 @@ export default {
 </script>
 
 <style scoped>
-@import url("https://fonts.googleapis.com/css?family=Lato");
+.case {
+  width: 100%;
+}
+.clock {
+  width: calc(var(--one)*350);
+  height: calc(var(--one)*350);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #fff url(clock.png);
+  background-size: cover;
+  border-radius: 50%;
+  border: var(--clock-border);
+  box-shadow: var(--clock-box-shadow);
+  transform-origin: left;
+}
+.clock::before {
+  content: '';
+  position: absolute;
+  width: calc(var(--one)*15);
+  height: calc(var(--one)*15);
+  background: #262626;
+  z-index: 99;
+  border-radius: 50%;
+}
+.hour,
+.min,
+.sec {
+  position: absolute;
+}
+.hour, .hr {
+  width: calc(var(--one)*182);
+  height: calc(var(--one)*182);
+}
+.min, .mn {
+  width: calc(var(--one)*220);
+  height: calc(var(--one)*220);
+}
+.sec, .sc {
+  width: calc(var(--one)*260);
+  height: calc(var(--one)*260);
+}
+.hr,
+.mn,
+.sc {
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  border-radius: 50%;
+}
+.hr::before {
+  content: '';
+  position: absolute;
+  width: calc(var(--one)*10);
+  height: calc(var(--one)*90);
+  /* background-color: #848484; */
+  background-color: #262626;
+  z-index: 10;
+  border-radius: var(--border-radius);
+}
+.mn::before {
+  content: '';
+  position: absolute;
+  width: calc(var(--one)*8);
+  height: calc(var(--one)*110);
+  background-color: #d6d6d6;
+  z-index: 11;
+  border-radius: var(--border-radius);
+}
+.sc::before {
+  content: '';
+  position: absolute;
+  width: calc(var(--one)*2);
+  height: calc(var(--one)*150);
+  background-color: #ff6767;
+  z-index: 12;
+  border-radius: var(--border-radius);
+}
+
 @import url("https://fonts.googleapis.com/css?family=Fjalla+One");
-
-.clock-case {
-  background-color: #62696F;
-  padding: 8%;
-  -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
-  border-radius: 50%;
-}
-.clock-dial {
-  background-color: #CECED0;
-  position: relative;
-  -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
-  border-radius: 50%;
-}
-.clock-ratio {
-  padding-bottom: 100%;
-  height: 0;
-  overflow: hidden;
-}
-.clock-dial-line {
-  content: "";
-  width: 1%;
-  height: 1.5%;
-  background: #b3b3b0;
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: rotate(0deg);
-}
-.clock-dial-line:nth-of-type(5n) {
-  height: 3%;
-}
-.clock-second-hand {
-  width: 1%;
-  height: 100%;
-  margin-left: -.5%;
-  position: absolute;
-  left: 50%;
-}
-.clock-second-hand:before {
-  content: "";
-  background-color: red;
-  width: 100%;
-  height: 55%;
-  top: 4%;
-  position: absolute;
-}
-.clock-minute-hand {
-  width: 2%;
-  height: 100%;
-  margin-left: -1%;
-  position: absolute;
-  left: 50%;
-}
-.clock-minute-hand:before {
-  content: "";
-  background-color: #404040;
-  width: 100%;
-  height: 50%;
-  top: 8%;
-  position: absolute;
-}
-.clock-hour-hand {
-  width: 3%;
-  height: 100%;
-  margin-left: -1.5%;
-  position: absolute;
-  left: 50%;
-}
-.clock-hour-hand:before {
-  content: "";
-  background-color: #000000;
-  width: 100%;
-  height: 46%;
-  top: 12%;
-  position: absolute;
-}
-.clock-nut {
-  position: absolute;
-  top: 46%;
-  left: 46%;
-  width: 8%;
-  height: 8%;
-  background-color: #000000;
-  -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
-  border-radius: 50%;
-}
-.clock-brand {
-  position: absolute;
-  top: 20%;
-  left: 50%;
-  transform: translateX(-50%);
-  margin: 0 auto;
-  width: 50%;
-  text-align: center;
-  color: #62696F;
-}
-
-.twelve,
-.three,
-.six,
-.nine {
-  position: absolute;
-  font-family: Lato, sans-serif;
-  color: #b3b3b0;
-}
-.twelve {
-  left: 50%;
-  transform: translateX(-50%);
-}
-/* http://zerosixthree.se/vertical-align-anything-with-just-3-lines-of-css/ */
-.three {
-  top: 50%;
-  transform: translateY(-50%);
-}
-.six {
-  left: 50%;
-  transform: translateX(-50%);
-}
-.nine {
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.clock-digi {
-  position: absolute;
-  /* 'bottom': 4.25rem */
-  bottom: 20%;
-  left: 50%;
-  transform: translateX(-50%);
-  /* min-width: 2rem; */
-  background: #83837a;
-  /* border-radius: .375rem;
-  padding: 0 .3em; */
-  text-align: center;
+.digi {
   font-family: "Fjalla One", sans-serif;
+  font-size: calc(var(--one)*40);
+  text-align: center;
+  line-height: calc(var(--one)*40);
   color: white;
-  /* box-shadow: inset 0 .125rem .125rem 0 rgba(0, 0, 0, 0.3),
-    inset 0 -.125rem .125rem 0 rgba(255, 255, 255, 0.2); */
+  background: #83837a;
+  border-radius: calc(var(--one)*3);
+  padding: var(--digi-padding);
+  transform: translateX(-50%);
+  transform: var(--digi-transform); 
+  box-shadow: var(--digi-box-shadow);
 }
 </style>

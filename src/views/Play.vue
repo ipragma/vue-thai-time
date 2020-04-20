@@ -8,7 +8,7 @@
             v-if="newDate" 
             :newDate="newDate" 
             :showSecond=false
-            nameBrand=""/>
+          />
         </v-col>
       </v-row>
 
@@ -148,7 +148,7 @@ export default {
       message: {
         badAnswer: "Bad Answer!",
         goodAnswer: "Good Answer!",
-        gameRule: "Guess the time in Thai displayed on the clock. Pick words and drag them to this zone.",
+        gameRule: "Drag the words to this area to compose what time it is on the clock.",
       }
     }
   },

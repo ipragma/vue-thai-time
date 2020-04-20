@@ -1,18 +1,28 @@
 <template>
   <v-app>
-    <!-- <div class="mx-auto my-auto"> -->
     <v-card 
-    width="540"
-    class="mx-auto my-auto">
+      width="540"
+      class="mx-auto my-auto">
 
-      <Header 
-        @toggleDrawer="toggleDrawer">
-      </Header>
+      <v-toolbar
+        color="indigo"
+        dark>
+        <v-app-bar-nav-icon v-if="(gamePhase == 'home')" @click.stop="toggleDrawer()"></v-app-bar-nav-icon>
+        <v-btn v-else icon @click="goHome()">
+          <v-icon>home</v-icon>
+        </v-btn>
+        <v-spacer></v-spacer>
+        <div>
+          <v-icon class="white--text">flash_on</v-icon>
+          <span class="title pr-1">{{ gameScore }}/{{ gameSettings['round'].value }}</span>
+        </div>
+      </v-toolbar>
 
       <v-content>
+        <component :is="selectedComponent"></component>
+        
         <Drawer 
           :toggle="toggle"
-          :links="gameLinks" 
           :settings="gameSettings" 
           @changeSettings="changeSettings">
 
@@ -40,16 +50,11 @@
               by <a class="white--text" :href="myInfo.link" target="_blank">{{ myInfo.name }}</a>
             </div>
           </template>
-
         </Drawer>
 
-        <component :is="selectedComponent"></component>
       </v-content>
 
-      <!-- <Footer
-        :info="myInfo"/> -->
     </v-card>
-    <!-- </div> -->
 
   </v-app>
 </template>
@@ -57,7 +62,6 @@
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex';
 import Drawer from '@/components/NavigationDrawer';
-import Header from '@/layouts/Header';
 import Home from '@/views/Home';
 import Play from '@/views/Play';
 import Over from '@/views/Over';
@@ -67,7 +71,6 @@ export default {
 
   components: {
     Drawer,
-    Header,
     Home,
     Play,
     Over,
@@ -82,7 +85,7 @@ export default {
   computed: {
     ...mapState([
       'gamePhase',
-      'gameLinks',
+      'gameScore',
       'gameSettings',
       'myInfo',
     ]),
@@ -93,6 +96,9 @@ export default {
   methods: {
     ...mapMutations([
     ]),
+    goHome() {
+      this.$store.state.gamePhase = 'home';
+    },
     toggleDrawer() {
       this.toggle = !this.toggle
     },
@@ -127,10 +133,10 @@ export default {
   }
 }
 .v-chip.number {
-  background-color:gold !important;
+  background-color:lightskyblue !important;
 }
 .v-chip.word {
-  background-color:coral !important;
+  background-color:lightsteelblue !important;
 }
 .designed {
   font-family: 'Dynalight';
