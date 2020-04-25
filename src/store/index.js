@@ -7,8 +7,8 @@ export default new Vuex.Store({
   state: {
     myInfo: {
       name: 'Nova Web App',
-      link: 'https://www.techonsunday.com',
-      support: 'https://www.techonsunday.com',
+      link: 'https://www.novawebapp.com',
+      support: 'https://www.novawebapp.com',
       author: 'iPragma'
     },
 
@@ -47,7 +47,7 @@ export default new Vuex.Store({
       'round': {
         comp: 'slider',
         title: 'Rounds',
-        value: 1,
+        value: 10,
         items: [1, 2, 20],
       },
       'choice': {
