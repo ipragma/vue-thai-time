@@ -207,7 +207,7 @@ export const thaiTimeMixin = {
       }
       minuteInThai = minuteInThai.filter(Boolean);
       if (minuteInThai.length > 0) {
-        minuteInThai = [minuteInThai.concat(w[8]), minuteInThai];
+        minuteInThai = [minuteInThai, minuteInThai.concat(w[8])];
       }
       if (minute.join("") == "30") {
         minuteInThai.unshift([n[13]]);
