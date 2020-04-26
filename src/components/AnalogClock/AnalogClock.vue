@@ -52,11 +52,11 @@ export default {
       currentDate: new Date(),
       clockWidth: 350,
       faces: {
-        default: require('./faces/default.png'),
-        classic: require('./faces/classic.png'),
-        elegant: require('./faces/elegant.png'),
-        modern:  require('./faces/modern.png'),
-        thai:    require('./faces/thai.png'),
+        default: require('./img/default.png'),
+        classic: require('./img/classic.png'),
+        elegant: require('./img/elegant.png'),
+        modern:  require('./img/modern.png'),
+        thai:    require('./img/thai.png'),
       },
     };
   },

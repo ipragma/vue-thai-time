@@ -7,6 +7,7 @@
         <v-col cols="8" sm="6">
           <AnalogClock
             clockFace="thai"
+            :showDigit=false
           />
         </v-col>
       </v-row>

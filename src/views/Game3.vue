@@ -3,7 +3,7 @@
 
     <v-card-text class="game-main pa-0">
       <v-row class="justify-center">
-        <v-col cols="8" sm="6">
+        <v-col cols="8" sm="5">
           <AnalogClock
             v-if="newDate" 
             clockFace="modern"
@@ -20,17 +20,18 @@
           <v-row class="justify-center">
             <v-col
               v-for="(answer, key) in gameStatus.user" :key="key"
-              cols="12"
-              sm="11"
+              cols="6"
+              sm="5"
               class="pt-0"
             >
               <v-item v-slot:default="{ active, toggle }">
                 <v-card
                   :dark="active ? true : false"
                   :color="active ? 'indigo lighten-2' : ''"
-                  class="d-flex align-center"
+                  class="d-flex overflow-y-auto"
                   @click="toggle"
                   :disabled="(gameStatus.grade != null)"
+                  :style="{ 'height': gameSettings.cardWidth.value + 'px' }"
                 >
                   <v-scroll-y-transition>
                     <div class="flex-grow-1">
