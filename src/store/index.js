@@ -97,10 +97,10 @@ export default new Vuex.Store({
       rules: {
         home:  "",
         game0: "Feel free to change the hours and the minutes on the clock to learn the differents ways to tell time in Thai.",
-        game1: "Drag the words to the bottom area to compose the time displayed on the clock.",
+        game1: "Drag the words to the bottom area to guess the time displayed on the clock.",
         game2: "Change the hours and the minutes below the clock to guess the time written in Thai.",
-        game3: "Choose one card wit the time written in Thai to guess the time displayed on the clock.",
-        game4: "Choose one clock among to guess the time written in Thai.",
+        game3: "Select one card written in Thai to guess what time it is on the clock.",
+        game4: "Select one card with the clock that displays the time written in Thai.",
         game5: "Sort the clocks in the correct order to match the cards with the time written in Thai.",
       }
     },
